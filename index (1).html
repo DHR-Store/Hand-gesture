@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Powered News & Video Fetcher</title>
+    <link rel="stylesheet" href="news.css">
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands"></script>
+</head>
+<body>
+    <button id="theme-toggle">Toggle Dark Mode</button>
+    
+    <button class="ask-ai-btn" onclick="askChatbot()">Ask AI</button>
+
+    <!-- Full-Screen Floating Chat Window -->
+    <div class="chat-modal" id="chatModal">
+        <button class="close-btn" onclick="closeChat()" style="color: #fff;">❌</button>
+        <iframe class="chat-frame" id="chatFrame" src="aiAgent.html"></iframe>
+    </div>
+
+    <h1>AI-Powered News & Video Fetcher</h1>
+
+    <!-- Voice Search Button -->
+    <button id="voice-search-btn">🎤 Voice Search</button>
+    
+    <input type="text" id="news-topic" placeholder="Enter news topic..." />
+    <button onclick="fetchNews()">Search News</button>
+    <button id="video-news-button" onclick="fetchVideoNews()">Show Video News</button>
+
+    <div id="news-container"></div>
+    <div id="video-container" style="display: none;"></div> 
+
+    <!-- Floating Camera for Gesture Control -->
+   <div id="video-feed">
+    <video autoplay playsinline muted></video>
+</div>
+    <canvas id="gesture-canvas"></canvas>
+
+    <p id="loading-message" style="display: none;">Loading more content...</p>
+    
+    <script src="newsf.js"></script>
+    <script src="gestureControl.js"></script>
+    <script src="voiceSearch.js"></script>
+</body>
+</html>

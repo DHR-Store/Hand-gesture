@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Powered News & Chatbot</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background: linear-gradient(135deg, #121212, #1e1e1e);
+    color: #fff;
+    text-align: center;
+    padding: 20px;
+    animation: fadeIn 1s ease-in-out;
+}
+
+h1, h2 {
+    font-size: 2rem;
+    text-shadow: 2px 2px 10px rgba(255, 255, 255, 0.2);
+}
+
+img {
+    width: 80%;
+    max-width: 600px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+    margin-bottom: 15px;
+    animation: zoomIn 1s ease-in-out;
+}
+
+#news-content {
+    font-size: 1.2rem;
+    line-height: 1.8;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+    max-width: 80%;
+    margin: 20px auto;
+}
+
+button {
+    background: linear-gradient(135deg, #ff416c, #ff4b2b);
+    color: #fff;
+    border: none;
+    padding: 12px 20px;
+    font-size: 1rem;
+    margin: 10px;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
+}
+
+button:hover {
+    background: linear-gradient(135deg, #ff4b2b, #ff416c);
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.6);
+}
+
+#chatbox {
+    margin-top: 20px;
+    padding: 15px;
+    max-width: 80%;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+}
+
+#chat-input {
+    padding: 10px;
+    width: 70%;
+    border: none;
+    border-radius: 5px;
+    margin: 10px 0;
+    outline: none;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes zoomIn {
+    from { opacity: 0; transform: scale(0.8); }
+    to { opacity: 1; transform: scale(1); }
+}      /* Full-Screen Floating Chat Window */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+        .chat-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw; /* Full Width */
+            height: 100vh; /* Full Height */
+            background: rgba(0, 0, 0, 1); /* Black Background */
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        /* Close Button */
+        .close-btn {
+            position: absolute;
+            top: 6px;
+            right: 5px;
+            width: 7px;
+            background: transparent;
+            border: none;
+            padding: 3px 8px;
+            border-radius: 0%;
+            font-size: 20px;
+            color: #fff;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        /* Full-Screen AI Chat Iframe */
+        .chat-frame {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        .ask-ai-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 7px 7px;
+    width: 45px;
+    height: 50px;
+    font-size: 16px;
+    cursor: pointer;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease-in-out;
+  }
+
+  .ask-ai-btn:hover {
+    background-color: #0056b3;
+  }
+</style>
+<body>
+  <button class="ask-ai-btn" onclick="askChatbot()"> Ask AI</button>
+
+    <h1 id="news-title">Loading News...</h1>
+    <img id="news-image" src="" alt="News Image">
+    <p id="news-content">Loading content...</p>
+
+    <button onclick="readSummary()">🔊 Read News</button>
+    <button onclick="shareSummary()">🐦 Share on Twitter</button>
+    <button onclick="shareOnWhatsApp()">📲 Share on WhatsApp</button>
+    <button onclick="generateSummary()">🧠 Generate AI Summary</button>
+
+  
+   
+
+    <!-- Full-Screen Floating Chat Window -->
+    <div class="chat-modal" id="chatModal">
+        <button class="close-btn" onclick="closeChat()" style="color: #fff;">❌</button>
+        <iframe class="chat-frame" id="chatFrame" src="aiAgent.html"></iframe>
+    </div>
+
+
+    <script>
+      // Load News from URL Parameters
+const params = new URLSearchParams(window.location.search);
+document.getElementById('news-title').textContent = params.get('title') || "AI-Powered News";
+document.getElementById('news-image').src = params.get('image') || "default.jpg";
+document.getElementById('news-content').textContent = params.get('content') || "No content available.";
+
+// Text-to-Speech
+function readSummary() {
+    let speech = new SpeechSynthesisUtterance(document.getElementById('news-content').textContent);
+    speech.lang = "en-US";
+    window.speechSynthesis.speak(speech);
+}
+
+// Share News
+function shareSummary() {
+    let text = encodeURIComponent(document.getElementById('news-content').textContent);
+    window.open(`https://twitter.com/intent/tweet?text=${text}`, "_blank");
+}
+
+function shareOnWhatsApp() {
+    let title = document.getElementById("news-title").textContent;
+    let url = window.location.href;
+    window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(title + " " + url)}`, "_blank");
+}
+
+// AI Summary with Meta AI
+async function generateSummary() {
+    let text = document.getElementById('news-content').textContent;
+    let summary = await getAISummary(text);
+    alert("AI Summary: " + summary);
+}
+
+// AI Chatbot
+function askChatbot() {
+            let chatModal = document.getElementById("chatModal");
+            let chatFrame = document.getElementById("chatFrame");
+
+            chatModal.style.display = "block";
+
+            // Fix for Android Full Screen Height Issue
+            chatModal.style.height = window.innerHeight + "px";
+            chatFrame.style.height = window.innerHeight + "px";
+        }
+
+        function closeChat() {
+            document.getElementById("chatModal").style.display = "none";
+        }
+
+        // Resize Fix when Screen Changes
+        window.addEventListener("resize", () => {
+            let chatModal = document.getElementById("chatModal");
+            let chatFrame = document.getElementById("chatFrame");
+            
+            if (chatModal.style.display === "block") {
+                chatModal.style.height = window.innerHeight + "px";
+                chatFrame.style.height = window.innerHeight + "px";
+            }
+        });
+// AI API Request
+async function getAISummary(text) {
+    if (!text) return "No description available.";
+
+    let metaAiUrl = "https://api.meta.ai/v1/models/llama2-7b/chat";
+    let apiKey = "LA-812157947b4a474da2934da9dd30330d1c70cd7833e04100ae6708f3fe9f0fee"; // Replace with actual API Key
+
+    let requestData = {
+        prompt: `Summarize or respond: ${text}`,
+        max_tokens: 100
+    };
+
+    try {
+        let response = await fetch(metaAiUrl, {
+            method: "POST",
+            headers: {
+                "Authorization": `Bearer ${apiKey}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(requestData)
+        });
+
+        let data = await response.json();
+        return data.choices[0].text.trim();
+    } catch (error) {
+        console.error("Error fetching AI:", error);
+        return "Sorry, I couldn't process that.";
+    }
+}
+    </script>
+</body>
+</html>
